@@ -4,7 +4,24 @@
 #include "portaudio.h"
 
 int g_count;
-note g_data;
+note g_sawData;
+note g_squData;
+note g_outData;
+
+void initNote(note *data, float *type)
+{
+    data->lVal=0;
+    data->rVal=0;
+    setFreq(data, 440.0);
+    data->pos=0;
+    data->waveTable=type;
+}
+
+void setFreq(note *data, float freq)
+{
+    data->baseFreq=freq;
+    data->increment=(float)LOOKUP_TABLE_SIZE * freq * SAMPLE_RATE_DIV;
+}
 
 void getErrorMsg(int err)
 {
@@ -35,14 +52,14 @@ void noteInterpolate(note *data)
     diffMin = max-data->pos;
     diffMax= data->pos-min;
 
-    data->lVal= g_sawWave[max]*diffMax;
-    data->lVal += g_sawWave[min]*diffMin;
+    data->lVal= data->waveTable[max]*diffMax;//g_sawWave[max]*diffMax;
+    data->lVal += data->waveTable[min]*diffMin;//g_sawWave[min]*diffMin;
 
-    data->rVal= g_sawWave[max]*diffMax;
-    data->rVal += g_sawWave[min]*diffMin;
+    data->rVal= data->waveTable[max]*diffMax;//g_sawWave[max]*diffMax;
+    data->rVal += data->waveTable[min]*diffMin;//g_sawWave[min]*diffMin;
 
-    data->lVal *= 0.92;
-    data->rVal *= 0.92;
+    data->lVal *= 0.82;
+    data->rVal *= 0.82;
 }
 
 void notePlay(note *data)
@@ -66,7 +83,11 @@ int generateAudio( const void *inputBuffer, void *outputBuffer,
         *out++ = data->lVal;
         *out++ = data->rVal;
 
-        notePlay(data);
+        notePlay(&g_sawData);
+        notePlay(&g_squData);
+
+        data->lVal=(g_sawData.lVal+g_squData.lVal)*0.5;
+        data->rVal=(g_sawData.rVal+g_squData.rVal)*0.5;
     }
     return 0;
 }

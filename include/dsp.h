@@ -8,16 +8,19 @@
 
 typedef struct
 {
-  float lVal;               //left sample value
-  float rVal;               //right sample value
-  float baseFreq;
-  float increment;          //amount to increment sample in wave table
-  float pos;               //position in wavetable
+    float lVal;               //left sample value
+    float rVal;               //right sample value
+    float baseFreq;
+    float increment;          //amount to increment sample in wave table
+    float pos;               //position in wavetable
+    float *waveTable;
 } note;
 
 void getErrorMsg(int);
 void noteIncrement(note *);
 void noteInterpolate(note *);
+void initNote(note *, float *);
+void setFreq(note *, float);
 void notePlay(note *);
 int generateAudio(const void *,
                     void *,
@@ -27,8 +30,11 @@ int generateAudio(const void *,
                     void *);
 
 extern int g_count;
-extern note g_data;
+extern note g_sawData;
+extern note g_squData;
+extern note g_outData;
 extern float g_noteTable[];
 extern float g_sawWave[];
+extern float g_squWave[];
 
 #endif

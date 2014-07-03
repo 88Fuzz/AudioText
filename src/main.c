@@ -13,9 +13,9 @@ int main(int argc, char *argv[])
     int delay;
     char c;
 
-    g_data.lVal=0;
-    g_data.rVal=0;
-    g_data.baseFreq=440.0;
+    initNote(&g_sawData, g_sawWave);
+    initNote(&g_squData, g_squWave);
+    initNote(&g_outData, NULL);
 
     if(argc!=3)
     {
@@ -27,11 +27,8 @@ int main(int argc, char *argv[])
 
     FILE *fp=fopen(argv[1],"r");
     if(fp==NULL)
-        return 0;
+        return 1;
 
-
-    g_data.increment=(float)LOOKUP_TABLE_SIZE * g_data.baseFreq * SAMPLE_RATE_DIV;
-    g_data.pos=0;
 
     if((err=Pa_Initialize()) != paNoError)
     {
@@ -39,20 +36,13 @@ int main(int argc, char *argv[])
         return 1;
     } 
 
-    err=Pa_OpenDefaultStream( &stream,
-                            0,
-                            2,
-                            paFloat32,
-                            SAMPLE_RATE,
-                            256,
-                            generateAudio,
-                            &g_data);
+    err=Pa_OpenDefaultStream( &stream, 0, 2, paFloat32, SAMPLE_RATE, 256, generateAudio, &g_outData);
+
     if(err != paNoError)
     {
         getErrorMsg(err);
             return 1;
     }
-
     if((err=Pa_StartStream(stream)) != paNoError)
     {
         getErrorMsg(err);
@@ -65,8 +55,8 @@ int main(int argc, char *argv[])
         fflush(stdout);
         if(isalpha(c))
         {
-            g_data.baseFreq=g_noteTable[toupper(c)-'A'];
-            g_data.increment=(float)LOOKUP_TABLE_SIZE * g_data.baseFreq * SAMPLE_RATE_DIV;
+            setFreq(&g_sawData,g_noteTable[toupper(c)-'A']);
+            setFreq(&g_squData,g_noteTable[toupper(c)-'A']);
             Pa_Sleep(delay);
         }
         else

@@ -20,4 +20,4 @@ wavetable:
 	python wavetable.py
 
 clean:
-	rm *.o $(EXTEXTAUDIO) $(EXNOTETABLE) 
+	rm $(EXTEXTAUDIO) $(EXNOTETABLE) 
