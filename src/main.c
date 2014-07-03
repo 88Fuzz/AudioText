@@ -1,8 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "include/portaudio.h"
-#include "include/notetable.h"
-#include "include/dsp.h"
+#include "portaudio.h"
+#include "dsp.h"
 
 
 

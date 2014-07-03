@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "include/dsp.h"
-#include "include/wavetable.h"
-#include "include/notetable.h"
+#include "dsp.h"
 #include "portaudio.h"
 
 int g_count;

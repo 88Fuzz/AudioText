@@ -28,5 +28,7 @@ int generateAudio(const void *,
 
 extern int g_count;
 extern note g_data;
+extern float g_noteTable[];
+extern float g_sawWave[];
 
 #endif
