@@ -16,10 +16,20 @@ typedef struct
     float *waveTable;
 } note;
 
+typedef struct
+{
+    note base;
+    note mid;
+    note high;
+//    float *waveTable1;
+//    float *waveTable2;
+} chord;
+
 void getErrorMsg(int);
 void noteIncrement(note *);
 void noteInterpolate(note *);
-void initNote(note *, float *);
+void initNote(note *, float *, float);
+void initChords();
 void setFreq(note *, float);
 void notePlay(note *);
 int generateAudio(const void *,
@@ -33,8 +43,17 @@ extern int g_count;
 extern note g_sawData;
 extern note g_squData;
 extern note g_outData;
+extern chord g_first;
+extern chord g_second;
+extern chord g_thrid;
+extern chord g_fourth;
+extern chord g_fifth;
+extern chord g_sixth;
+extern chord g_seventh;
+extern chord g_eighth;
 extern float g_noteTable[];
 extern float g_sawWave[];
 extern float g_squWave[];
+extern float g_sineWave[];
 
 #endif

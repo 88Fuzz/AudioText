@@ -32,7 +32,7 @@ int main()
         58.2704701898,
         61.7354126570};*/
     int i,j;
-    FILE *fp=fopen("include/notetable.h","w");
+    FILE *fp=fopen("notetable.txt","w");
     fprintf(fp,"#ifndef __NOTETABLE_H__\n");
     fprintf(fp,"#define __NOTETABLE_H__\n");
     fprintf(fp,"\nfloat g_noteTable[]={\n");
@@ -41,7 +41,7 @@ int main()
     {
         for(j=0;j<12;j++)
         {
-            fprintf(fp,"%f,\n",base[j]);//*(i+1));
+            fprintf(fp,"%f,\n",base[j]*2);//*(i+1));
         }
     }
     fprintf(fp,"\b\b\n};\n");
