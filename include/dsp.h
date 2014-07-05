@@ -55,5 +55,6 @@ extern float g_noteTable[];
 extern float g_sawWave[];
 extern float g_squWave[];
 extern float g_sineWave[];
+extern float g_triWave[];
 
 #endif

@@ -17,11 +17,25 @@ chord g_sixth;
 chord g_seventh;
 chord g_eighth;
 
+#define Bb1 58.2704701898
+#define C1  65.4063913251
+#define D1  73.4161919794
+#define Eb1 77.7817459305
+#define F1  87.3070578583
+#define G1  97.9988589954
+#define A1  110.000000000
+#define Bb2 (Bb1*2)
+#define C2  (C1*2)
+#define D2  (D1*2)
+#define Eb2 (Eb1*2)
+#define F2  (F1*2)
+#define G2  (G1*2)
+
 void initChords()
 {
-    initNote(&(g_first.base), g_sineWave, 51.9130871985); 
-    initNote(&(g_first.mid), g_sineWave, 61.7354126570); 
-    initNote(&(g_first.high), g_sineWave, 77.7817459305);
+    initNote(&(g_first.base), g_sineWave, Bb1); 
+    initNote(&(g_first.mid),  g_sineWave, D1); 
+    initNote(&(g_first.high), g_squWave, F1);
 }
 
 void initNote(note *data, float *type, float freq)
@@ -109,14 +123,17 @@ int generateAudio( const void *inputBuffer, void *outputBuffer,
         data->lVal=0;
         data->rVal=0;
 
-//        data->lVal+=g_sawData.lVal+g_squData.lVal;
-//        data->rVal+=g_sawData.rVal+g_squData.rVal;
+        data->lVal+=g_sawData.lVal+g_squData.lVal;
+        data->rVal+=g_sawData.rVal+g_squData.rVal;
 
-        data->lVal+=/*g_first.base.lVal;+g_first.mid.lVal+*/g_first.high.lVal;
-        data->rVal+=/*g_first.base.rVal;+g_first.mid.rVal+*/g_first.high.rVal;
+//        data->lVal+=/*g_first.base.lVal;+g_first.mid.lVal;//+*/g_first.high.lVal;
+//        data->rVal+=/*g_first.base.rVal;+g_first.mid.rVal;//+*/g_first.high.rVal;
 
-//        data->lVal/=5;
-//        data->rVal/=5;
+        data->lVal+=g_first.base.lVal;+g_first.mid.lVal;+g_first.high.lVal;
+        data->rVal+=g_first.base.rVal;+g_first.mid.rVal;+g_first.high.rVal;
+
+        data->lVal/=5;
+        data->rVal/=5;
 //        data->lVal/=2;
 //        data->rVal/=2;
     }

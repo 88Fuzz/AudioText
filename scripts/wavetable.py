@@ -1,9 +1,29 @@
 from pylab import plot as py_plot
 from pylab import show as py_plot_show
-from math import sin, pi
+from math import sin, pi, asin
 
 TableLength = 2048
 Table = [0] * TableLength
+
+def frac(x):
+    return x-abs(x)
+    
+
+def TriangleWave():
+    tmp=342
+    for n in range(0,TableLength):
+        Table[n] = (2/pi) * asin(sin((2*pi*n)/TableLength))
+    py_plot(Table)
+    py_plot_show()
+    f = open("triangle.txt", "w") 
+    f.write("= {")
+    for num in Table:
+        f.write(str(num) + ",\n")
+    
+    f.write("};")
+    #print(Table)
+    f.close()      
+
 
 def SineWave():
     for n in range(0,TableLength):
@@ -95,7 +115,8 @@ def NoteFrequency():
         
 
 if __name__ == "__main__":
-    SineWave()
-    SquareWave()
-    SawtoothWave()
-    NoteFrequency()
+#    SineWave()
+#    SquareWave()
+#    SawtoothWave()
+    TriangleWave()
+#    NoteFrequency()
