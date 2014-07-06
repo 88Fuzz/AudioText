@@ -13,11 +13,12 @@ int main(int argc, char *argv[])
     int delay;
     char c;
 
-    initNote(&g_sawData, g_sawWave, 440.0);
-    initNote(&g_squData, g_squWave, 440.0);
-    initNote(&g_outData, NULL, 440.0);
+    initNote(&g_sawData, g_sawWave);
+    initNote(&g_squData, g_squWave);
+    initNote(&g_outData, NULL);
 
     initChords();
+    g_chord=&(g_first);
 
     if(argc!=3)
     {
