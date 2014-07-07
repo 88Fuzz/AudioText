@@ -9,8 +9,11 @@ int main(int argc, char *argv[])
 {
     PaStream *stream;
     PaError err;
-    int count=0;
+    int chordCount=0;
+    int nChordCount=0;
+    int nChord=1;
     int delay;
+    int seed=0;
     char c;
 
     initNote(&g_sawData, g_sawWave);
@@ -52,8 +55,60 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    if((c=fgetc(fp))!=EOF)
+    {
+        seed=c;
+        if((c=fgetc(fp))!=EOF)
+        {
+            seed*=c*(c+c);
+            if((c=fgetc(fp))!=EOF)
+            {
+                seed+=((c%8)+1)*c;
+            }
+        }
+    }
+
+    srand(seed);
+    fseek(fp,0,SEEK_SET);
+    nChordCount=(rand()%10)+3;
+    nChord=(rand()%6)+1;
+
     while ((c = fgetc(fp)) != EOF)
     {
+        if(chordCount++==nChordCount)
+        {
+            chordCount=0;
+            nChordCount=(rand()%10)+3;
+            nChord=(rand()%6)+1;
+            switch(nChord)
+            {
+                case 1:
+                    g_chord=&(g_first);
+                break;
+                case 2:
+                    g_chord=&(g_second);
+                break;
+                case 3:
+                    g_chord=&(g_third);
+                break;
+                case 4:
+                    g_chord=&(g_fourth);
+                break;
+                case 5:
+                    g_chord=&(g_fifth);
+                break;
+                case 6:
+                    g_chord=&(g_sixth);
+                break;
+                case 7:
+                    g_chord=&(g_seventh);
+                break;
+                default:
+                    g_chord=&(g_first);
+                break;
+            }
+
+        }
         printf("%c",c);
         fflush(stdout);
         if(isalpha(c))
