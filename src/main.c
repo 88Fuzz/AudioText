@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "portaudio.h"
 #include "dsp.h"
+#include "random.h"
 
 
 
@@ -57,29 +58,32 @@ int main(int argc, char *argv[])
 
     if((c=fgetc(fp))!=EOF)
     {
-        seed=c;
+        seed=c*14*c;
         if((c=fgetc(fp))!=EOF)
         {
             seed*=c*(c+c);
             if((c=fgetc(fp))!=EOF)
             {
                 seed+=((c%8)+1)*c;
+                if((c=fgetc(fp))!=EOF)
+                {
+                    seed*=c*(2*c);
+                }
             }
         }
     }
 
     srand(seed);
+    printf("SEED %d\n", seed);
     fseek(fp,0,SEEK_SET);
-    nChordCount=(rand()%10)+3;
-    nChord=(rand()%6)+1;
+    updateNexts(&nChord, &nChordCount);
 
     while ((c = fgetc(fp)) != EOF)
     {
         if(chordCount++==nChordCount)
         {
             chordCount=0;
-            nChordCount=(rand()%10)+3;
-            nChord=(rand()%6)+1;
+            updateNexts(&nChord, &nChordCount);
             switch(nChord)
             {
                 case 1:
