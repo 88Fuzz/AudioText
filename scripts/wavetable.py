@@ -115,8 +115,8 @@ def NoteFrequency():
         
 
 if __name__ == "__main__":
-#    SineWave()
+    SineWave()
 #    SquareWave()
 #    SawtoothWave()
-    TriangleWave()
+#    TriangleWave()
 #    NoteFrequency()

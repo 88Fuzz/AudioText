@@ -3,6 +3,7 @@
 #include "portaudio.h"
 #include "dsp.h"
 #include "random.h"
+#include "typedefs.h"
 
 
 
@@ -13,8 +14,10 @@ int main(int argc, char *argv[])
     int chordCount=0;
     int nChordCount=0;
     int nChord=1;
+    int nInver=1;
     int delay;
     int seed=0;
+    float delayMult=1;
     char c;
 
     initNote(&g_sawData, g_sawWave);
@@ -59,67 +62,79 @@ int main(int argc, char *argv[])
     if((c=fgetc(fp))!=EOF)
     {
         seed=c*14*c;
+    printf("SEED %d\n", seed);
         if((c=fgetc(fp))!=EOF)
         {
             seed*=c*(c+c);
+    printf("SEED %d\n", seed);
             if((c=fgetc(fp))!=EOF)
             {
                 seed+=((c%8)+1)*c;
+    printf("SEED %d\n", seed);
                 if((c=fgetc(fp))!=EOF)
                 {
                     seed*=c*(2*c);
+    printf("SEED %d\n", seed);
                 }
             }
         }
     }
 
-    srand(seed);
+    g_seed=seed;
     printf("SEED %d\n", seed);
     fseek(fp,0,SEEK_SET);
-    updateNexts(&nChord, &nChordCount);
+    updateNexts(&nChord, &nChordCount, &nInver);
 
     while ((c = fgetc(fp)) != EOF)
     {
-        if(chordCount++==nChordCount)
-        {
-            chordCount=0;
-            updateNexts(&nChord, &nChordCount);
-            switch(nChord)
-            {
-                case 1:
-                    g_chord=&(g_first);
-                break;
-                case 2:
-                    g_chord=&(g_second);
-                break;
-                case 3:
-                    g_chord=&(g_third);
-                break;
-                case 4:
-                    g_chord=&(g_fourth);
-                break;
-                case 5:
-                    g_chord=&(g_fifth);
-                break;
-                case 6:
-                    g_chord=&(g_sixth);
-                break;
-                case 7:
-                    g_chord=&(g_seventh);
-                break;
-                default:
-                    g_chord=&(g_first);
-                break;
-            }
-
-        }
         printf("%c",c);
         fflush(stdout);
         if(isalpha(c))
         {
             setFreq(&g_sawData,g_noteTable[toupper(c)-'A']);
             setFreq(&g_squData,g_noteTable[toupper(c)-'A']);
-            Pa_Sleep(delay);
+            Pa_Sleep(delay*delayMult);
+            delayMult=getRandNum(1,100);
+
+            if(delayMult<=25)
+                delayMult=2;
+            else
+                delayMult=1;
+
+
+            if(chordCount++==nChordCount)
+            {
+                chordCount=0;
+                switch(nChord)
+                {
+                    case 1:
+                        g_chord=&(g_first);
+                    break;
+                    case 2:
+                        g_chord=&(g_second);
+                    break;
+                    case 3:
+                        g_chord=&(g_third);
+                    break;
+                    case 4:
+                        g_chord=&(g_fourth);
+                    break;
+                    case 5:
+                        g_chord=&(g_fifth);
+                    break;
+                    case 6:
+                        g_chord=&(g_sixth);
+                    break;
+                    case 7:
+                        g_chord=&(g_seventh);
+                    break;
+                    default:
+                        g_chord=&(g_first);
+                    break;
+                }
+                setChordInversion(g_chord,nInver-1);
+                updateNexts(&nChord, &nChordCount, &nInver);
+            }
         }
         else
             Pa_Sleep(delay*1.25);
